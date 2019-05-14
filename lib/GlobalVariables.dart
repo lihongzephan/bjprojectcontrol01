@@ -10,7 +10,7 @@ import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:threading/threading.dart';
 import 'package:speech_recognition/speech_recognition.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+//import 'package:flutter_tts/flutter_tts.dart';
 
 // Import Self Darts
 import 'LangStrings.dart';
@@ -102,16 +102,16 @@ class gv {
     }
 
     // Init for TTS
-    ttsFlutter = FlutterTts();
+    //ttsFlutter = FlutterTts();
 
-    if (Platform.isAndroid) {
-      ttsFlutter.ttsInitHandler(() {
-        ttsGetLanguages();
-        ttsGetVoices();
-      });
-    } else if (Platform.isIOS) {
-      ttsGetLanguages();
-    }
+//    if (Platform.isAndroid) {
+//      ttsFlutter.ttsInitHandler(() {
+//        ttsGetLanguages();
+//        ttsGetVoices();
+//      });
+//    } else if (Platform.isIOS) {
+//      ttsGetLanguages();
+//    }
 
     // Init for STT
     print('_MyAppState.activateSpeechRecognizer... ');
@@ -125,46 +125,46 @@ class gv {
   }
 
   // Functions for TTS
-  static Future ttsGetLanguages() async {
-    ttsLanguages = await ttsFlutter.getLanguages;
-    // if (languages != null) setState(() => languages);
-  }
-
-  static Future ttsGetVoices() async {
-    ttsVoices = await ttsFlutter.getVoices;
-    // if (voices != null) setState(() => voices);
-  }
-
-  static Future ttsSpeak() async {
-    if (ttsNewVoiceText != null) {
-      if (ttsNewVoiceText.isNotEmpty) {
-        print(jsonEncode(await ttsFlutter.getLanguages));
-        print(jsonEncode(await ttsFlutter.getVoices));
-        print(await ttsFlutter.isLanguageAvailable("en-US"));
-        await ttsFlutter.setLanguage("en-US");
-        await ttsFlutter.setVoice("luy");
-        await ttsFlutter.setSpeechRate(1.0);
-        await ttsFlutter.setVolume(1.0);
-        await ttsFlutter.setPitch(1.0);
-
-        //ttsNewVoiceText = 'do you have a brain? Yes, you are so stupid. you are an idiot!';
-
-        var result = await ttsFlutter.speak(ttsNewVoiceText);
-        // if (result == 1) setState(() => ttsState = TtsState.playing);
-        if (result == 1) {
-          ttsState = TtsState.playing;
-        }
-      }
-    }
-  }
-
-  static Future ttsStop() async {
-    var result = await ttsFlutter.stop();
-    // if (result == 1) setState(() => ttsState = TtsState.stopped);
-    if (result == 1) {
-      ttsState = TtsState.stopped;
-    }
-  }
+//  static Future ttsGetLanguages() async {
+//    ttsLanguages = await ttsFlutter.getLanguages;
+//    // if (languages != null) setState(() => languages);
+//  }
+//
+//  static Future ttsGetVoices() async {
+//    ttsVoices = await ttsFlutter.getVoices;
+//    // if (voices != null) setState(() => voices);
+//  }
+//
+//  static Future ttsSpeak() async {
+//    if (ttsNewVoiceText != null) {
+//      if (ttsNewVoiceText.isNotEmpty) {
+//        print(jsonEncode(await ttsFlutter.getLanguages));
+//        print(jsonEncode(await ttsFlutter.getVoices));
+//        print(await ttsFlutter.isLanguageAvailable("en-US"));
+//        await ttsFlutter.setLanguage("en-US");
+//        await ttsFlutter.setVoice("luy");
+//        await ttsFlutter.setSpeechRate(1.0);
+//        await ttsFlutter.setVolume(1.0);
+//        await ttsFlutter.setPitch(1.0);
+//
+//        //ttsNewVoiceText = 'do you have a brain? Yes, you are so stupid. you are an idiot!';
+//
+//        var result = await ttsFlutter.speak(ttsNewVoiceText);
+//        // if (result == 1) setState(() => ttsState = TtsState.playing);
+//        if (result == 1) {
+//          ttsState = TtsState.playing;
+//        }
+//      }
+//    }
+//  }
+//
+//  static Future ttsStop() async {
+//    var result = await ttsFlutter.stop();
+//    // if (result == 1) setState(() => ttsState = TtsState.stopped);
+//    if (result == 1) {
+//      ttsState = TtsState.stopped;
+//    }
+//  }
 
   static getString(strKey) {
     var strResult = '';
@@ -178,18 +178,18 @@ class gv {
   }
 
   // tts vars
-  static FlutterTts ttsFlutter;
-  static dynamic ttsLanguages;
-  static dynamic ttsVoices;
-  static String ttsLanguage;
-  static String ttsVoice;
-
-  static String ttsNewVoiceText;
-
-  static TtsState ttsState = TtsState.stopped;
-
-  static get ttsIsPlaying => ttsState == TtsState.playing;
-  static get ttsIsStopped => ttsState == TtsState.stopped;
+  //static FlutterTts ttsFlutter;
+//  static dynamic ttsLanguages;
+//  static dynamic ttsVoices;
+//  static String ttsLanguage;
+//  static String ttsVoice;
+//
+//  static String ttsNewVoiceText;
+//
+//  static TtsState ttsState = TtsState.stopped;
+//
+//  static get ttsIsPlaying => ttsState == TtsState.playing;
+//  static get ttsIsStopped => ttsState == TtsState.stopped;
 
   // stt vars
   static const sttLanguages = const [
@@ -299,9 +299,11 @@ class gv {
     static var intDefaultMaxWords = 30;
     static var intDefaultWaitTime = 5;
     static var intDefaultAutoPrintTime = 9;
+    static var intDefaultRBUSDis = 100;
     static var intMaxWords = 30;
     static var intWaitTime = 10;
     static var intAutoPrintTime = 9;
+    static var intRBUSDis = 100;
 
     // Var For ShowDialog
     static int intShowDialogIndex = 0;
@@ -326,6 +328,7 @@ class gv {
       socket.onConnect((data) {
         gbolSIOConnected = true;
         bolFirstTimeLoginSuccess = true;
+        gv.setString('serverIP', gv.serverIP);
         print('onConnect');
         ut.showToast(ls.gs('NetworkConnected'));
 

@@ -13,6 +13,7 @@ import 'ScreenVariables.dart';
 import 'PageHome.dart';
 import 'PageSelectLanguage.dart';
 import 'PageSettingsMain.dart';
+import 'Utilities.dart';
 
 // Main Program
 void main() {
@@ -37,6 +38,51 @@ void main() {
         // First Time Use, set Current Language to English
         ls.setLang('EN');
       }
+
+      gv.serverIP = gv.getString('serverIP');
+
+
+      if (gv.getString('intMaxWords') == '') {
+        ut.funDebug('Default');
+        gv.intMaxWords = gv.intDefaultMaxWords;
+      } else {
+        ut.funDebug('getString');
+        gv.intMaxWords = int.parse(gv.getString('intMaxWords'));
+      }
+
+      if (gv.getString('intWaitTime') == '') {
+        ut.funDebug('Default');
+        gv.intWaitTime = gv.intDefaultWaitTime;
+      } else {
+        ut.funDebug('getString');
+        gv.intWaitTime = int.parse(gv.getString('intWaitTime'));
+      }
+
+      if (gv.getString('intAutoPrintTime') == '') {
+        ut.funDebug('Default');
+        gv.intAutoPrintTime = gv.intDefaultAutoPrintTime;
+      } else {
+        ut.funDebug('getString');
+        gv.intAutoPrintTime = int.parse(gv.getString('intAutoPrintTime'));
+      }
+
+      if (gv.getString('intRBUSDis') == '') {
+        ut.funDebug('Default');
+        gv.intRBUSDis = gv.intDefaultRBUSDis;
+      } else {
+        ut.funDebug('getString');
+        gv.intRBUSDis = int.parse(gv.getString('intRBUSDis'));
+      }
+
+      //gv.intMaxWords = int.parse(gv.getString('intMaxWords'));
+      //gv.intWaitTime = int.parse(gv.getString('intWaitTime'));
+      //gv.intAutoPrintTime = int.parse(gv.getString('intAutoPrintTime'));
+      //gv.intRBUSDis = int.parse(gv.getString('intRBUSDis'));
+
+//      gv.intMaxWords = gv.getString('intMaxWords');
+//      gv.intWaitTime = gv.getString('intWaitTime');
+//      gv.intAutoPrintTime = gv.getString('intAutoPrintTime');
+//      gv.intRBUSDis = gv.getString('intRBUSDis');
 
       // Run MainApp
       runApp(new MyApp());

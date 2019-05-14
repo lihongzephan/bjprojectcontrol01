@@ -99,8 +99,11 @@ class ls {
     { 'Title':'MaxWords', 'Content':'Max Number of Words: '},
     { 'Title':'WaitTime', 'Content':'Time for Waiting Words(s): '},
     { 'Title':'AutoPrintTime', 'Content':'Time for Auto Print(m): '},
+    { 'Title':'RBUSDis', 'Content':'Distance Sensor Detect Distance(cm): '},
     { 'Title':'ServerIP', 'Content':'Server IP Address'},
     { 'Title':'Connect', 'Content':'Connect to Server'},
+    { 'Title':'ChangeSettings', 'Content':'Change Settings'},
+    { 'Title':'changeSettingsSuccess', 'Content':'Successfully change settings'},
   ];
 
   // vars for Simplified Chinese
@@ -180,8 +183,11 @@ class ls {
     { 'Title':'MaxWords', 'Content':'最大字数限制：'},
     { 'Title':'WaitTime', 'Content':'等待文字时间(s)：'},
     { 'Title':'AutoPrintTime', 'Content':'打印机自动打印时间(m): '},
+    { 'Title':'RBUSDis', 'Content':'距离感应器感应距离(cm): '},
     { 'Title':'ServerIP', 'Content':'伺服器IP地址'},
     { 'Title':'Connect', 'Content':'连接伺服器'},
+    { 'Title':'ChangeSettings', 'Content':'更改设置'},
+    { 'Title':'changeSettingsSuccess', 'Content':'设置成功'},
   ];
 
   // vars for Traditional Chinese
@@ -261,8 +267,11 @@ class ls {
     { 'Title':'MaxWords', 'Content':'最大字數限制：'},
     { 'Title':'WaitTime', 'Content':'等待文字時間(s)：'},
     { 'Title':'AutoPrintTime', 'Content':'打印機自動打印時間(m): '},
+    { 'Title':'RBUSDis', 'Content':'距離感應器感應距離(cm): '},
     { 'Title':'ServerIP', 'Content':'伺服器IP地址'},
     { 'Title':'Connect', 'Content':'連接伺服器'},
+    { 'Title':'ChangeSettings', 'Content':'更改設置'},
+    { 'Title':'changeSettingsSuccess', 'Content':'設置成功'},
   ];
 
   // To set Current Language

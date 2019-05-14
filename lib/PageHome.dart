@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:speech_recognition/speech_recognition.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_permissions/simple_permissions.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+//import 'package:flutter_tts/flutter_tts.dart';
 
 // Import Self Darts
 import 'LangStrings.dart';
@@ -47,6 +47,7 @@ class ClsHome extends StatelessWidget {
   final ctlMaxWords = TextEditingController();
   final ctlWaitTime = TextEditingController();
   final ctlAutoPrintTime = TextEditingController();
+  final ctlRBUSDis = TextEditingController();
   final ctlServerIP = TextEditingController();
 
   void funCheckJoyStick() {
@@ -104,15 +105,14 @@ class ClsHome extends StatelessWidget {
     }
   }
 
-
   void funMaxWordsChange() {
     gv.intMaxWords = int.parse(ctlMaxWords.text);
     if (gv.intMaxWords == 0) {
       gv.intMaxWords = gv.intDefaultMaxWords;
     }
-    funSocketEmitChangeSettings();
+    gv.setString('intMaxWords', gv.intMaxWords.toString());
+    //funSocketEmitChangeSettings();
   }
-
 
   void funWaitTimeChange() {
     gv.intWaitTime = int.parse(ctlWaitTime.text);
@@ -122,10 +122,9 @@ class ClsHome extends StatelessWidget {
     if (gv.intWaitTime < 1) {
       gv.intWaitTime = 1;
     }
-    funSocketEmitChangeSettings();
+    gv.setString('intWaitTime', gv.intWaitTime.toString());
+    //funSocketEmitChangeSettings();
   }
-
-
 
   void funAutoPrintTimeChange() {
     gv.intAutoPrintTime = int.parse(ctlAutoPrintTime.text);
@@ -135,9 +134,22 @@ class ClsHome extends StatelessWidget {
     if (gv.intAutoPrintTime < 1) {
       gv.intAutoPrintTime = 1;
     }
-    funSocketEmitChangeSettings();
+    gv.setString('intAutoPrintTime', gv.intAutoPrintTime.toString());
+    //funSocketEmitChangeSettings();
   }
 
+  void funRBUSDisChange() {
+    gv.bolAutoMove = false;
+    gv.intRBUSDis = int.parse(ctlRBUSDis.text);
+    if (gv.intRBUSDis == 0) {
+      gv.intRBUSDis = gv.intDefaultRBUSDis;
+    }
+    if (gv.intRBUSDis < 20) {
+      gv.intRBUSDis = 20;
+    }
+    gv.setString('intRBUSDis', gv.intRBUSDis.toString());
+    //funSocketEmitChangeSettings();
+  }
 
   void funHomeChangeMoveMode() {
     if (gv.bolAutoMove) {
@@ -150,16 +162,26 @@ class ClsHome extends StatelessWidget {
   }
 
   void funSocketEmitChangeSettings() {
-    gv.socket.emit('CtlChangeSettings', [gv.strID, gv.intMaxWords, gv.intWaitTime * 1000, gv.intAutoPrintTime * 60000, gv.bolAutoMove]);
+    gv.socket.emit('CtlChangeSettings', [
+      gv.strID,
+      gv.intMaxWords,
+      gv.intWaitTime * 1000,
+      gv.intAutoPrintTime * 60000,
+      gv.intRBUSDis,
+      gv.bolAutoMove,
+    ]);
+    ut.showToast(ls.gs('changeSettingsSuccess'));
+    ut.funDebug('Press change settings button');
   }
-
 
   void funConnectServer() {
-    gv.serverIP = ctlServerIP.text;
-    gv.URI = 'http://' + gv.serverIP + ':10541';
-    gv.initSocket();
-  }
+    if (ctlServerIP.text.isNotEmpty) {
+      gv.serverIP = ctlServerIP.text;
+      gv.URI = 'http://' + gv.serverIP + ':10541';
+      gv.initSocket();
+    }
 
+  }
 
   Widget MoveModeButton() {
     var text = ls.gs('Mode:Manual');
@@ -181,7 +203,19 @@ class ClsHome extends StatelessWidget {
     );
   }
 
+  Widget ChangeSettingsButton() {
+    var text = ls.gs('ChangeSettings');
+    var color = Colors.cyanAccent;
 
+    return RaisedButton(
+      shape: new RoundedRectangleBorder(
+          borderRadius: new BorderRadius.circular(sv.dblDefaultRoundRadius)),
+      textColor: Colors.white,
+      color: color,
+      onPressed: () => funSocketEmitChangeSettings(),
+      child: Text(text, style: TextStyle(fontSize: sv.dblDefaultFontSize * 1)),
+    );
+  }
 
   Widget ConnectButton() {
     var text = ls.gs('Connect');
@@ -196,18 +230,13 @@ class ClsHome extends StatelessWidget {
     );
   }
 
-
-
-
-
   Widget Body() {
     return Container(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-            height: sv.dblBodyHeight * 0.65,
             width: sv.dblScreenWidth,
             child: Center(
               child: SingleChildScrollView(
@@ -215,38 +244,67 @@ class ClsHome extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Container(
-                      height: sv.dblDefaultFontSize * 5,
-                      width: sv.dblScreenWidth / 2,
-                      child: TextField(
-                        controller: ctlMaxWords,
-                        decoration:
-                            new InputDecoration(labelText: ls.gs('MaxWords')),
-                        keyboardType: TextInputType.number,
-                        onChanged: (a) => funMaxWordsChange(),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          height: sv.dblDefaultFontSize * 5,
+                          width: sv.dblScreenWidth / 3,
+                          child: TextField(
+                            controller: ctlMaxWords,
+                            decoration: new InputDecoration(
+                                labelText: ls.gs('MaxWords')),
+                            keyboardType: TextInputType.number,
+                            onChanged: (a) => funMaxWordsChange(),
+                          ),
+                        ),
+                        Container(
+                          width: sv.dblScreenWidth / 6,
+                        ),
+                        Container(
+                          height: sv.dblDefaultFontSize * 5,
+                          width: sv.dblScreenWidth / 3,
+                          child: TextField(
+                            controller: ctlWaitTime,
+                            decoration: new InputDecoration(
+                                labelText: ls.gs('WaitTime')),
+                            keyboardType: TextInputType.number,
+                            onChanged: (a) => funWaitTimeChange(),
+                          ),
+                        ),
+                      ],
                     ),
-                    Container(
-                      height: sv.dblDefaultFontSize * 5,
-                      width: sv.dblScreenWidth / 2,
-                      child: TextField(
-                        controller: ctlWaitTime,
-                        decoration:
-                            new InputDecoration(labelText: ls.gs('WaitTime')),
-                        keyboardType: TextInputType.number,
-                        onChanged: (a) => funWaitTimeChange(),
-                      ),
-                    ),
-                    Container(
-                      height: sv.dblDefaultFontSize * 5,
-                      width: sv.dblScreenWidth / 2,
-                      child: TextField(
-                        controller: ctlAutoPrintTime,
-                        decoration:
-                        new InputDecoration(labelText: ls.gs('AutoPrintTime')),
-                        keyboardType: TextInputType.number,
-                        onChanged: (a) => funAutoPrintTimeChange(),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          height: sv.dblDefaultFontSize * 5,
+                          width: sv.dblScreenWidth / 3,
+                          child: TextField(
+                            controller: ctlAutoPrintTime,
+                            decoration: new InputDecoration(
+                                labelText: ls.gs('AutoPrintTime')),
+                            keyboardType: TextInputType.number,
+                            onChanged: (a) => funAutoPrintTimeChange(),
+                          ),
+                        ),
+                        Container(
+                          width: sv.dblScreenWidth / 6,
+                        ),
+                        Container(
+                          height: sv.dblDefaultFontSize * 5,
+                          width: sv.dblScreenWidth / 3,
+                          child: TextField(
+                            controller: ctlRBUSDis,
+                            decoration: new InputDecoration(
+                                labelText: ls.gs('RBUSDis')),
+                            keyboardType: TextInputType.number,
+                            onChanged: (a) => funRBUSDisChange(),
+                          ),
+                        ),
+                      ],
                     ),
                     Container(
                       child: SizedBox(
@@ -254,6 +312,19 @@ class ClsHome extends StatelessWidget {
                         width: sv.dblScreenWidth / 2,
                         child: MoveModeButton(),
                       ),
+                    ),
+                    Container(
+                      height: sv.dblDefaultFontSize,
+                    ),
+                    Container(
+                      child: SizedBox(
+                        height: sv.dblDefaultFontSize * 2.5,
+                        width: sv.dblScreenWidth / 2,
+                        child: ChangeSettingsButton(),
+                      ),
+                    ),
+                    Container(
+                      height: sv.dblDefaultFontSize,
                     ),
                   ],
                 ),
@@ -328,53 +399,40 @@ class ClsHome extends StatelessWidget {
     );
   }
 
-
-
-
   Widget ConnectBody() {
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            height: sv.dblBodyHeight,
-            width: sv.dblScreenWidth,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: sv.dblScreenWidth / 2,
-                  child: TextField(
-                    controller: ctlServerIP,
-                    decoration: new InputDecoration(labelText: ls.gs('ServerIP')),
-                    keyboardType: TextInputType.number,
-                    onChanged: (a) => gv.serverIP = ctlServerIP.text,
-                  ),
-                ),
-                Text(' '),
-                Container(
-                  // height: sv.dblBodyHeight / 4,
-                  // width: sv.dblScreenWidth / 4,
-                  child: Center(
-                    child: SizedBox(
-                      height: sv.dblDefaultFontSize * 2.5,
-                      width: sv.dblScreenWidth / 3,
-                      child: ConnectButton(),
-                    ),
-                  ),
-                ),
-              ],
+      child: Container(
+        width: sv.dblScreenWidth,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              width: sv.dblScreenWidth / 2,
+              child: TextField(
+                controller: ctlServerIP,
+                decoration: new InputDecoration(labelText: ls.gs('ServerIP')),
+                keyboardType: TextInputType.number,
+                onChanged: (a) => gv.serverIP = ctlServerIP.text,
+              ),
             ),
-          ),
-        ],
+            Text(' '),
+            Container(
+              // height: sv.dblBodyHeight / 4,
+              // width: sv.dblScreenWidth / 4,
+              child: Center(
+                child: SizedBox(
+                  height: sv.dblDefaultFontSize * 2.5,
+                  width: sv.dblScreenWidth / 3,
+                  child: ConnectButton(),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
-
-
-
 
 //  void funInitFirstTime() {
 //    // WebRTC
@@ -394,6 +452,7 @@ class ClsHome extends StatelessWidget {
       ctlMaxWords.text = gv.intMaxWords.toString();
       ctlWaitTime.text = gv.intWaitTime.toString();
       ctlAutoPrintTime.text = gv.intAutoPrintTime.toString();
+      ctlRBUSDis.text = gv.intRBUSDis.toString();
 
       ctlServerIP.text = gv.serverIP;
 
