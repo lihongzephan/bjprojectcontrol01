@@ -158,7 +158,7 @@ class ClsHome extends StatelessWidget {
       gv.bolAutoMove = true;
     }
     funSocketEmitChangeSettings();
-    gv.storeHome.dispatch(Actions.Increment);
+    gv.storeHome.dispatch(GVActions.Increment);
   }
 
   void funSocketEmitChangeSettings() {
@@ -363,13 +363,13 @@ class ClsHome extends StatelessWidget {
                     if (gv.dblAlignY < -1) {
                       gv.dblAlignY = -1;
                     }
-                    gv.storeHome.dispatch(Actions.Increment);
+                    gv.storeHome.dispatch(GVActions.Increment);
                     funCheckJoyStick();
                   },
                   onPanEnd: (dragDetails1) {
                     gv.dblAlignX = 0;
                     gv.dblAlignY = 0;
-                    gv.storeHome.dispatch(Actions.Increment);
+                    gv.storeHome.dispatch(GVActions.Increment);
                     gv.socket.emit('RBMoveRobot', [
                       gv.strID,
                       ['F', 0, 0, 0]

@@ -19,11 +19,11 @@ import 'PageHome.dart';
 
 // Import Pages
 
-enum Actions {
+enum GVActions {
   Increment
 } // The reducer, which takes the previous count and increments it in response to an Increment action.
 int reducerRedux(int intSomeInteger, dynamic action) {
-  if (action == Actions.Increment) {
+  if (action == GVActions.Increment) {
     return intSomeInteger + 1;
   }
   return intSomeInteger;
@@ -221,7 +221,7 @@ class gv {
 
       switch(gstrCurPage) {
         case 'Home':
-          gv.storeHome.dispatch(Actions.Increment);
+          gv.storeHome.dispatch(GVActions.Increment);
           break;
         default:
           break;
@@ -232,7 +232,7 @@ class gv {
   static void sttStop() {
     sttSpeech.stop().then((result) {
       sttIsListening = false;
-      gv.storeHome.dispatch(Actions.Increment);
+      gv.storeHome.dispatch(GVActions.Increment);
     });
   }
 
@@ -249,7 +249,7 @@ class gv {
 
     switch(gstrCurPage) {
       case 'Home':
-        gv.storeHome.dispatch(Actions.Increment);
+        gv.storeHome.dispatch(GVActions.Increment);
         break;
       default:
         break;
@@ -263,7 +263,7 @@ class gv {
         case 'Home':
           sttCancel();
           gv.listText.add(sttTranscription);
-          gv.storeHome.dispatch(Actions.Increment);
+          gv.storeHome.dispatch(GVActions.Increment);
 
           if (!sttIsListening) {
             sttStart();
@@ -276,7 +276,7 @@ class gv {
 
     static void sttOnRecognitionComplete() {
       sttIsListening = false;
-      gv.storeHome.dispatch(Actions.Increment);
+      gv.storeHome.dispatch(GVActions.Increment);
       if (!sttIsListening) {
         sttStart();
       }
@@ -323,7 +323,7 @@ class gv {
 
     static initSocket() async {
       if (!gbolSIOConnected) {
-        socket = await SocketIOManager().createInstance(URI);
+        socket = await SocketIOManager().createInstance(SocketOptions(URI, transports: [Transports.WEB_SOCKET, Transports.POLLING] ));
       }
       socket.onConnect((data) {
         gbolSIOConnected = true;
@@ -333,7 +333,7 @@ class gv {
         ut.showToast(ls.gs('NetworkConnected'));
 
         if (gv.gstrCurPage == 'Home') {
-          gv.storeHome.dispatch(Actions.Increment);
+          gv.storeHome.dispatch(GVActions.Increment);
         }
 
         if (!bolFirstTimeCheckLogin) {
@@ -364,7 +364,7 @@ class gv {
 //        bolFirstTimeLoginSuccess = false;
 //
 //        if (gv.gstrCurPage == 'Home') {
-//          gv.storeHome.dispatch(Actions.Increment);
+//          gv.storeHome.dispatch(GVActions.Increment);
 //        }
       });
 
@@ -402,7 +402,7 @@ class gv {
     static void resetStates() {
       switch (gstrCurPage) {
         case 'SettingsMain':
-          storeSettingsMain.dispatch(Actions.Increment);
+          storeSettingsMain.dispatch(GVActions.Increment);
           break;
         default:
           break;
